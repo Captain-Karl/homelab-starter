@@ -1,0 +1,49 @@
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack
+    container_name: bookstack
+    restart: unless-stopped
+    depends_on:
+      - bookstack-db
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      APP_KEY: ${BOOKSTACK_APP_KEY}
+      APP_API_ENABLED: "true"
+      DB_HOST: bookstack-db
+      DB_PORT: "3306"
+      DB_USERNAME: bookstack
+      DB_DATABASE: bookstackapp
+      DB_PASSWORD: ${BOOKSTACK_DB_PASSWORD}
+    volumes:
+      - bookstack_data:/config
+    ports:
+      - "8082:80"
+    networks:
+      - homelab
+
+  bookstack-db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack-db
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      MYSQL_ROOT_PASSWORD: ${BOOKSTACK_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: bookstackapp
+      MYSQL_USER: bookstack
+      MYSQL_PASSWORD: ${BOOKSTACK_DB_PASSWORD}
+    volumes:
+      - bookstack_db_data:/config
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  bookstack_data:
+  bookstack_db_data:

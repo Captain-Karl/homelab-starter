@@ -1,0 +1,82 @@
+# Traefik reverse proxy + socket-proxy.
+# This stack is brought up automatically by install.sh if you opt into the
+# reverse proxy / HTTPS layer. See docs/reverse-proxy-traefik.md.
+
+services:
+  # Sits between Traefik and the real Docker socket. Mounts the socket
+  # read-only and exposes only the specific API endpoints Traefik needs.
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    container_name: socket-proxy
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      SERVICES: 1
+      TASKS: 1
+      NETWORKS: 1
+      EVENTS: 1
+      POST: 0
+      BUILD: 0
+      COMMIT: 0
+      CONFIGS: 0
+      DELETE: 0
+      EXEC: 0
+      IMAGES: 0
+      VOLUMES: 0
+      INFO: 0
+      NODES: 0
+      PLUGINS: 0
+      SECRETS: 0
+      SESSION: 0
+      SWARM: 0
+      SYSTEM: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - socket_proxy
+
+  traefik:
+    image: traefik:v3.6
+    container_name: traefik
+    restart: unless-stopped
+    depends_on:
+      - socket-proxy
+    ports:
+      - "${TRAEFIK_BIND_ADDRESS:-0.0.0.0}:80:80"
+      - "${TRAEFIK_BIND_ADDRESS:-0.0.0.0}:443:443"
+    env_file:
+      - .env
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - traefik_proxy
+      - socket_proxy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8082/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    # Traefik dashboard is disabled by default. To enable it:
+    #  1. Generate a bcrypt hash: htpasswd -nB <username>
+    #  2. Uncomment dashboard-auth in dynamic.yml and put your hash there
+    #  3. Uncomment the labels below
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
+    #   - "traefik.http.routers.dashboard.entrypoints=websecure"
+    #   - "traefik.http.routers.dashboard.tls=true"
+    #   - "traefik.http.routers.dashboard.tls.certresolver=cloudflare"
+    #   - "traefik.http.routers.dashboard.service=api@internal"
+    #   - "traefik.http.routers.dashboard.middlewares=dashboard-auth@file"
+
+networks:
+  traefik_proxy:
+    external: true
+  socket_proxy:
+    external: true
+
+volumes:
+  traefik_letsencrypt:

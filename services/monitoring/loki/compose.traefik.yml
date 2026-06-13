@@ -1,0 +1,16 @@
+services:
+  loki:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.loki.rule=Host(`loki.${DOMAIN}`)"
+      - "traefik.http.routers.loki.entrypoints=websecure"
+      - "traefik.http.routers.loki.tls=true"
+      - "traefik.http.routers.loki.tls.certresolver=cloudflare"
+      - "traefik.http.services.loki.loadbalancer.server.port=3100"
+
+networks:
+  traefik_proxy:
+    external: true

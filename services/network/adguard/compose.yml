@@ -1,0 +1,23 @@
+services:
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "3000:3000/tcp"  # Setup wizard + web UI
+      - "853:853/tcp"    # DNS-over-TLS (optional)
+    volumes:
+      - adguard_conf:/opt/adguardhome/conf
+      - adguard_work:/opt/adguardhome/work
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  adguard_conf:
+  adguard_work:

@@ -1,0 +1,23 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      SIGNUPS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+      ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN}
+    volumes:
+      - vaultwarden_data:/data
+    ports:
+      - "8083:80"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  vaultwarden_data:

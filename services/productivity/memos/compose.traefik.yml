@@ -1,0 +1,16 @@
+services:
+  memos:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.memos.rule=Host(`memos.${DOMAIN}`)"
+      - "traefik.http.routers.memos.entrypoints=websecure"
+      - "traefik.http.routers.memos.tls=true"
+      - "traefik.http.routers.memos.tls.certresolver=cloudflare"
+      - "traefik.http.services.memos.loadbalancer.server.port=5230"
+
+networks:
+  traefik_proxy:
+    external: true

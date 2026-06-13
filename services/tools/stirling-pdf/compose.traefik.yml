@@ -1,0 +1,16 @@
+services:
+  stirling-pdf:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.stirling-pdf.rule=Host(`stirling.${DOMAIN}`)"
+      - "traefik.http.routers.stirling-pdf.entrypoints=websecure"
+      - "traefik.http.routers.stirling-pdf.tls=true"
+      - "traefik.http.routers.stirling-pdf.tls.certresolver=cloudflare"
+      - "traefik.http.services.stirling-pdf.loadbalancer.server.port=8080"
+
+networks:
+  traefik_proxy:
+    external: true

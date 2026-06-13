@@ -1,0 +1,21 @@
+services:
+  linkding:
+    image: sissbruecker/linkding
+    container_name: linkding
+    restart: unless-stopped
+    environment:
+      LD_SUPERUSER_NAME: ${LD_SUPERUSER_NAME}
+      LD_SUPERUSER_PASSWORD: ${LD_SUPERUSER_PASSWORD}
+    volumes:
+      - linkding_data:/etc/linkding/data
+    ports:
+      - "9091:9090"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  linkding_data:

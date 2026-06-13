@@ -1,0 +1,28 @@
+# cAdvisor needs --privileged and read access to host /sys, /var/lib/docker,
+# etc. to report per-container metrics. This is normal for cAdvisor but is
+# worth knowing if you're security-conscious about what runs privileged.
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    mem_limit: 256m
+    memswap_limit: 256m
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    command:
+      - '--docker_only=true'
+      - '--store_container_labels=false'
+      - '--disable_metrics=cpu_topology,cpuset,memory_numa,tcp,udp,diskIO,sched,process'
+    ports:
+      - "8085:8080"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

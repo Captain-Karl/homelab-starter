@@ -1,0 +1,16 @@
+services:
+  navidrome:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.navidrome.rule=Host(`navidrome.${DOMAIN}`)"
+      - "traefik.http.routers.navidrome.entrypoints=websecure"
+      - "traefik.http.routers.navidrome.tls=true"
+      - "traefik.http.routers.navidrome.tls.certresolver=cloudflare"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+
+networks:
+  traefik_proxy:
+    external: true

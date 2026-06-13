@@ -1,0 +1,16 @@
+services:
+  kavita:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.entrypoints=websecure"
+      - "traefik.http.routers.kavita.tls=true"
+      - "traefik.http.routers.kavita.tls.certresolver=cloudflare"
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
+
+networks:
+  traefik_proxy:
+    external: true

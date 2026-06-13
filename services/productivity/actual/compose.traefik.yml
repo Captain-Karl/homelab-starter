@@ -1,0 +1,19 @@
+services:
+  actual-budget:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.actual.rule=Host(`actual.${DOMAIN}`)"
+      - "traefik.http.routers.actual.entrypoints=websecure"
+      - "traefik.http.routers.actual.tls=true"
+      - "traefik.http.routers.actual.tls.certresolver=cloudflare"
+      - "traefik.http.routers.actual.middlewares=actual-headers"
+      - "traefik.http.middlewares.actual-headers.headers.customresponseheaders.Cross-Origin-Opener-Policy=same-origin"
+      - "traefik.http.middlewares.actual-headers.headers.customresponseheaders.Cross-Origin-Embedder-Policy=require-corp"
+      - "traefik.http.services.actual.loadbalancer.server.port=5006"
+
+networks:
+  traefik_proxy:
+    external: true

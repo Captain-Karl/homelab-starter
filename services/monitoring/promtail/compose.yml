@@ -1,0 +1,23 @@
+# Promtail ships logs to Loki - it has no web UI of its own. Requires Loki
+# to be running (the loki service in this repo, or any Loki reachable at
+# the URL in promtail-config.yml).
+services:
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+      - promtail_positions:/tmp/positions
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  promtail_positions:

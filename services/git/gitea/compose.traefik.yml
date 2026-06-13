@@ -1,0 +1,21 @@
+# SSH (port 222) is always direct - Traefik only handles HTTP/HTTPS.
+services:
+  gitea:
+    environment:
+      GITEA__server__ROOT_URL: https://gitea.${DOMAIN}/
+      GITEA__server__SSH_DOMAIN: ${DOMAIN}
+      GITEA__server__SSH_PORT: "222"
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)"
+      - "traefik.http.routers.gitea.entrypoints=websecure"
+      - "traefik.http.routers.gitea.tls=true"
+      - "traefik.http.routers.gitea.tls.certresolver=cloudflare"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
+
+networks:
+  traefik_proxy:
+    external: true

@@ -1,0 +1,21 @@
+# Note: Vaultwarden's own ADMIN_TOKEN-protected /admin page is reachable at
+# https://vault.${DOMAIN}/admin once exposed - consider adding an IP allowlist
+# middleware (see services/network/traefik/dynamic.yml) if you enable it.
+services:
+  vaultwarden:
+    environment:
+      DOMAIN: https://vault.${DOMAIN}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vault.${DOMAIN}`)"
+      - "traefik.http.routers.vaultwarden.entrypoints=websecure"
+      - "traefik.http.routers.vaultwarden.tls=true"
+      - "traefik.http.routers.vaultwarden.tls.certresolver=cloudflare"
+      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
+
+networks:
+  traefik_proxy:
+    external: true

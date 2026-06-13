@@ -1,0 +1,21 @@
+services:
+  memos:
+    image: ghcr.io/usememos/memos:stable
+    container_name: memos
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      MEMOS_PORT: "5230"
+    volumes:
+      - memos_data:/var/opt/memos
+    ports:
+      - "5230:5230"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  memos_data:

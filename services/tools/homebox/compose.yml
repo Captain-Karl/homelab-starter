@@ -1,0 +1,20 @@
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox
+    container_name: homebox
+    restart: unless-stopped
+    environment:
+      HBOX_WEB_PORT: "7745"
+    volumes:
+      - homebox_data:/data
+    ports:
+      - "7745:7745"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  homebox_data:

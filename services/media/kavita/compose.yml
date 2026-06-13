@@ -1,0 +1,23 @@
+services:
+  kavita:
+    image: lscr.io/linuxserver/kavita:latest
+    container_name: kavita
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - kavita_config:/config
+      - ${KAVITA_MEDIA_DIR}:/media:ro
+    ports:
+      - "5000:5000"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  kavita_config:

@@ -1,0 +1,43 @@
+# Traefik dynamic configuration. Read continuously - changes apply without
+# a restart. Use this for middlewares, TLS options, and file-based routers.
+
+http:
+  middlewares:
+    # Basic auth for the Traefik dashboard. Generate your own hash with:
+    #   htpasswd -nB <username>
+    # then uncomment this block and the dashboard labels in compose.yml.
+    # dashboard-auth:
+    #   basicAuth:
+    #     users:
+    #       - "admin:$$2y$$05$$REPLACE_WITH_YOUR_OWN_BCRYPT_HASH"
+
+    # Optional: restrict access to Tailscale clients only. 100.64.0.0/10 is
+    # the entire Tailscale CGNAT range. Add this middleware to any router's
+    # `middlewares` label to keep a service off the public internet even
+    # with a real domain pointed at it.
+    # tailscale-only:
+    #   ipAllowList:
+    #     sourceRange:
+    #       - "100.64.0.0/10"
+    #       - "127.0.0.1/32"
+
+    # Security headers - add to routers via `middlewares` label.
+    secure-headers:
+      headers:
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "no-referrer-when-downgrade"
+        customFrameOptionsValue: "SAMEORIGIN"
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      sniStrict: true
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256

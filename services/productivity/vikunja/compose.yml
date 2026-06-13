@@ -1,0 +1,22 @@
+services:
+  vikunja:
+    image: vikunja/vikunja
+    container_name: vikunja
+    restart: unless-stopped
+    environment:
+      VIKUNJA_SERVICE_TIMEZONE: ${TZ}
+    volumes:
+      - vikunja_data:/app/vikunja/files
+      - vikunja_db:/db
+    ports:
+      - "3456:3456"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  vikunja_data:
+  vikunja_db:

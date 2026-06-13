@@ -1,0 +1,18 @@
+services:
+  mealie:
+    environment:
+      BASE_URL: https://mealie.${DOMAIN}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.mealie.rule=Host(`mealie.${DOMAIN}`)"
+      - "traefik.http.routers.mealie.entrypoints=websecure"
+      - "traefik.http.routers.mealie.tls=true"
+      - "traefik.http.routers.mealie.tls.certresolver=cloudflare"
+      - "traefik.http.services.mealie.loadbalancer.server.port=9000"
+
+networks:
+  traefik_proxy:
+    external: true

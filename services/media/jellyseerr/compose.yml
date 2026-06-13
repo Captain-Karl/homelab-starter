@@ -1,0 +1,20 @@
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - jellyseerr_data:/app/config
+    ports:
+      - "5055:5055"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  jellyseerr_data:

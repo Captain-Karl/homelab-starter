@@ -1,0 +1,18 @@
+services:
+  actual-budget:
+    image: actualbudget/actual-server
+    container_name: actual-budget
+    restart: unless-stopped
+    volumes:
+      - actual_data:/data
+    ports:
+      - "5006:5006"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  actual_data:

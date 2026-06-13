@@ -1,0 +1,18 @@
+services:
+  vikunja:
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${DOMAIN}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.vikunja.rule=Host(`vikunja.${DOMAIN}`)"
+      - "traefik.http.routers.vikunja.entrypoints=websecure"
+      - "traefik.http.routers.vikunja.tls=true"
+      - "traefik.http.routers.vikunja.tls.certresolver=cloudflare"
+      - "traefik.http.services.vikunja.loadbalancer.server.port=3456"
+
+networks:
+  traefik_proxy:
+    external: true

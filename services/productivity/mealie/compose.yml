@@ -1,0 +1,21 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie
+    container_name: mealie
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      ALLOW_SIGNUP: "false"
+    volumes:
+      - mealie_data:/app/data
+    ports:
+      - "9925:9000"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  mealie_data:

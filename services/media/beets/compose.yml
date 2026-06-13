@@ -1,0 +1,27 @@
+# Beets is a command-line music tagger/organizer, not a web app - there's
+# nothing to browse to. It's included with profile "manual" so install.sh
+# won't start it by default; run it on demand with:
+#   docker compose --profile manual run --rm beets beet import /incoming
+services:
+  beets:
+    image: lscr.io/linuxserver/beets:latest
+    container_name: beets
+    profiles:
+      - manual
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - beets_config:/config
+      - ${BEETS_MUSIC_DIR}:/music
+      - ${BEETS_INCOMING_DIR}:/incoming
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  beets_config:
