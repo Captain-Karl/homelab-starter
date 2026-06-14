@@ -1,0 +1,16 @@
+services:
+  searxng:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.${DOMAIN}`)"
+      - "traefik.http.routers.searxng.entrypoints=websecure"
+      - "traefik.http.routers.searxng.tls=true"
+      - "traefik.http.routers.searxng.tls.certresolver=cloudflare"
+      - "traefik.http.services.searxng.loadbalancer.server.port=8080"
+
+networks:
+  traefik_proxy:
+    external: true

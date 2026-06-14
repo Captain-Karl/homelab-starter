@@ -1,0 +1,16 @@
+services:
+  open-webui:
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.http.routers.open-webui.rule=Host(`open-webui.${DOMAIN}`)"
+      - "traefik.http.routers.open-webui.entrypoints=websecure"
+      - "traefik.http.routers.open-webui.tls=true"
+      - "traefik.http.routers.open-webui.tls.certresolver=cloudflare"
+      - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
+
+networks:
+  traefik_proxy:
+    external: true

@@ -68,6 +68,9 @@ reachable at `https://<service>.<your-domain>` instead.
 | Tools | Stirling PDF | 8087 | PDF editing/manipulation toolkit |
 | Git | Gitea | 3002 (web), 222 (SSH) | Self-hosted Git server |
 | Automation | n8n | 5678 | Workflow automation |
+| AI | Ollama | 11434 | Local LLM runner - no web UI/auth, API only |
+| AI | Open WebUI | 8080 | Chat UI for Ollama (and other LLM backends) |
+| AI | SearXNG | 8888 | Self-hosted, privacy-respecting metasearch engine |
 
 ## Reverse proxy & HTTPS (optional)
 

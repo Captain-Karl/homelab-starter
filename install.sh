@@ -44,6 +44,9 @@ CATALOG=(
   "tools/stirling-pdf|Stirling PDF|PDF editing/manipulation toolkit"
   "git/gitea|Gitea|Self-hosted Git server"
   "automation/n8n|n8n|Workflow automation"
+  "ai/ollama|Ollama|Local LLM runner"
+  "ai/open-webui|Open WebUI|Chat UI for Ollama (and other LLM backends)"
+  "ai/searxng|SearXNG|Self-hosted, privacy-respecting metasearch engine"
 )
 
 CHECKLIST_ARGS=()

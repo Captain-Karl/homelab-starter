@@ -1,0 +1,28 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "8888:8080"
+    environment:
+      - SEARXNG_BASE_URL=${SEARXNG_BASE_URL}
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+    volumes:
+      - searxng_data:/etc/searxng
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  searxng_data:
