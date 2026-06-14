@@ -2,7 +2,7 @@
 
 A pick-and-choose collection of `docker compose` stacks for popular self-hosted
 apps, plus an interactive installer so you can spin up exactly the services
-you want with sane defaults.
+you want with same defaults.
 
 ## What is this?
 
