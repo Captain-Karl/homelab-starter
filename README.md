@@ -1,21 +1,25 @@
 # homelab-starter
 
+![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+![Docker Compose](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)
+![Shell](https://img.shields.io/badge/installer-bash-4EAA25?logo=gnubash&logoColor=white)
+
 A pick-and-choose collection of `docker compose` stacks for popular self-hosted
 apps, plus an interactive installer so you can spin up exactly the services
 you want with same defaults.
 
-## What is this?
+## 🤔 What is this?
 
 If you've ever wanted to try self-hosting but felt overwhelmed by the number
 of options (Jellyfin? Mealie? Vaultwarden? what's a reverse proxy?), this repo
 is a starting point. Run one script, check the boxes for the services you
-want, and they come up with working defaults — accessible immediately at
+want, and they come up with working defaults - accessible immediately at
 `http://<your-server-ip>:<port>`.
 
 Optional reverse proxy + HTTPS (Traefik) and remote access without port
 forwarding (Tailscale) are covered separately once you're ready for them.
 
-## Quick start
+## 🚀 Quick start
 
 ```bash
 git clone https://github.com/<you>/homelab-starter.git
@@ -29,10 +33,10 @@ The installer will:
 2. Create a shared Docker network and a top-level `.env` with your timezone,
    user/group IDs, etc.
 3. Optionally configure Traefik for HTTPS + subdomains (skip this for now if
-   you're new — direct ports work fine).
+   you're new - direct ports work fine).
 4. Bring up the selected services with `docker compose`.
 
-## Included services
+## 📦 Included services
 
 All ports below are the defaults when accessing a service directly
 (`http://<server-ip>:<port>`). If you enable Traefik, each service is also
@@ -72,7 +76,7 @@ reachable at `https://<service>.<your-domain>` instead.
 | AI | Open WebUI | 8080 | Chat UI for Ollama (and other LLM backends) |
 | AI | SearXNG | 8888 | Self-hosted, privacy-respecting metasearch engine |
 
-## Reverse proxy & HTTPS (optional)
+## 🔒 Reverse proxy & HTTPS (optional)
 
 By default every service is reachable at `http://<server-ip>:<port>`. If you
 want `https://service.yourdomain.com` URLs with automatic certificates, see
@@ -80,20 +84,30 @@ want `https://service.yourdomain.com` URLs with automatic certificates, see
 domain name and a DNS provider with an API (Cloudflare is free and works
 well).
 
-## Remote access without port forwarding
+## 🌐 Remote access without port forwarding
 
 Most home internet connections are behind CGNAT, so you can't just open a
 port and access your services from outside your house. The easiest fix is
-[Tailscale](https://tailscale.com) — see
+[Tailscale](https://tailscale.com) - see
 [docs/remote-access-tailscale.md](docs/remote-access-tailscale.md).
 
-## Requirements
+## 🖥️ What this runs on
+
+Most of this catalog runs comfortably on a low-power Intel N100 mini PC with
+16GB of RAM - less horsepower than most modern desktops or laptops, so if it
+runs there, it'll run on whatever you've got.
+
+The AI stack (`ai/ollama`, `ai/open-webui`, `ai/searxng`) is the exception -
+that runs on a separate, higher-end gaming PC where it can take advantage of
+a real GPU for inference.
+
+## ✅ Requirements
 
 - A Linux machine (or VM) with Docker and the Docker Compose plugin installed
 - `whiptail` (preinstalled on Debian/Ubuntu; `apt install whiptail` if missing)
 
-## License
+## 📄 License
 
-MIT — see [LICENSE](LICENSE). Each service is its own upstream project under
+MIT - see [LICENSE](LICENSE). Each service is its own upstream project under
 its own license; this repo only contains compose files and configuration to
 run them.
