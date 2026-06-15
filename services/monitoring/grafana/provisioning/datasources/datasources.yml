@@ -1,0 +1,13 @@
+# Auto-provisions the Loki datasource used by the bundled SSH Security
+# Monitor dashboard. Requires the monitoring/loki stack to be running on
+# the shared `homelab` network (container name "loki").
+apiVersion: 1
+
+datasources:
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: false
+    editable: true

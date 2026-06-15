@@ -26,3 +26,42 @@ scrape_configs:
         target_label: 'compose_project'
       - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
         target_label: 'compose_service'
+
+  # Feeds the "SSH Security Monitor" Grafana dashboard (see
+  # monitoring/grafana/provisioning/dashboards). Extracts action/method/
+  # src_ip/ssh_user as labels so the dashboard's queries can filter on them.
+  - job_name: ssh-auth
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: ssh-auth
+          __path__: /var/log/auth.log
+    pipeline_stages:
+      - match:
+          selector: '{job="ssh-auth"}'
+          stages:
+            - regex:
+                expression: '.*sshd.*Accepted (?P<method>\S+) for (?P<ssh_user>\S+) from (?P<src_ip>\S+)'
+            - labels:
+                method:
+                ssh_user:
+                src_ip:
+            - template:
+                source: action
+                template: 'Accepted'
+            - labels:
+                action:
+      - match:
+          selector: '{job="ssh-auth"}'
+          stages:
+            - regex:
+                expression: '.*sshd.*Failed password for (invalid user )?(?P<ssh_user>\S+) from (?P<src_ip>\S+)'
+            - labels:
+                ssh_user:
+                src_ip:
+            - template:
+                source: action
+                template: 'Failed'
+            - labels:
+                action:

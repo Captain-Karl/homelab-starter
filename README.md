@@ -61,7 +61,7 @@ reachable at `https://<service>.<your-domain>` instead.
 | Media | Kavita | 5000 | Comics/manga/ebook reader |
 | Media | Beets | - | CLI music tagger - run manually via `docker compose run`, not in the installer menu |
 | Monitoring | Uptime Kuma | 3001 | Uptime monitoring with status pages |
-| Monitoring | Grafana | 3030 | Dashboards for metrics and logs |
+| Monitoring | Grafana | 3030 | Dashboards for metrics and logs - ships with an "SSH Security Monitor" dashboard (needs Loki + Promtail) |
 | Monitoring | Prometheus | 9090 | Metrics collection |
 | Monitoring | Loki | 3100 | Log aggregation (pairs with Promtail) |
 | Monitoring | Promtail | - | Ships logs to Loki, no web UI |
