@@ -30,7 +30,7 @@ scrape_configs:
   # Feeds the "SSH Security Monitor" Grafana dashboard (see
   # monitoring/grafana/provisioning/dashboards). Extracts action/method/
   # src_ip/ssh_user as labels so the dashboard's queries can filter on them.
-  - job_name: ssh-auth
+  - job_name: auth
     static_configs:
       - targets:
           - localhost
@@ -42,26 +42,9 @@ scrape_configs:
           selector: '{job="ssh-auth"}'
           stages:
             - regex:
-                expression: '.*sshd.*Accepted (?P<method>\S+) for (?P<ssh_user>\S+) from (?P<src_ip>\S+)'
+                expression: 'sshd(?:-session)?\[\d+\]: (?P<action>Accepted|Failed|Disconnected|Invalid user|Connection closed by) (?:(?P<method>publickey|password|keyboard-interactive) for (?:invalid user )?)?(?P<ssh_user>\S+)?(?: from (?P<src_ip>\d+\.\d+\.\d+\.\d+))?(?: port (?P<src_port>\d+))?'
             - labels:
+                action:
+                ssh_user:
+                src_ip:
                 method:
-                ssh_user:
-                src_ip:
-            - template:
-                source: action
-                template: 'Accepted'
-            - labels:
-                action:
-      - match:
-          selector: '{job="ssh-auth"}'
-          stages:
-            - regex:
-                expression: '.*sshd.*Failed password for (invalid user )?(?P<ssh_user>\S+) from (?P<src_ip>\S+)'
-            - labels:
-                ssh_user:
-                src_ip:
-            - template:
-                source: action
-                template: 'Failed'
-            - labels:
-                action:
